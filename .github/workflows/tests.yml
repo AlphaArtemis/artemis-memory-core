@@ -1,0 +1,44 @@
+name: Synthetic tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: ${{ matrix.os }} / Python ${{ matrix.python }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, macos-14]
+        python: ['3.11', '3.14']
+    steps:
+      - name: Check out source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0 # v7.1.0
+        with:
+          python-version: ${{ matrix.python }}
+          check-latest: false
+      - name: Report interpreter and SQLite
+        run: python3 -B -c "import platform, sqlite3; print(platform.python_version(), sqlite3.sqlite_version)"
+      - name: Run synthetic tests
+        run: python3 -B -m unittest discover -s tests -v
+      - name: Run synthetic demo
+        run: python3 -B -m artemis_memory_core demo --state "$RUNNER_TEMP/demo"
+      - name: Install and run offline application
+        run: |
+          python3 -B install.py --output "$RUNNER_TEMP/artemis-memory-core.pyz"
+          python3 -B "$RUNNER_TEMP/artemis-memory-core.pyz" demo --state "$RUNNER_TEMP/installed-demo"
+
