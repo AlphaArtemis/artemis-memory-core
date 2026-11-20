@@ -1,6 +1,6 @@
 # Artemis Memory Core — Community Edition
 
-**0.1.0-alpha.1 · Experimental Public Preview candidate · Apache-2.0**
+**0.1.0-alpha.1 · Experimental Public Preview · Apache-2.0**
 
 Local-first documentary memory: retrieve original text, preserve provenance, and
 keep versions distinguishable. This small, experimental distribution provides a
@@ -11,25 +11,43 @@ The software retrieves documents. It does **not** certify that their statements
 are true. Source instructions remain untrusted text; the engine never executes
 them. The demo is labelled **SYNTHETIC DEMO — NOT REAL CONVERSATIONS**.
 
-This is an unpublished release candidate, licensed under the Apache License,
-Version 2.0. The complete, unmodified [license text](LICENSE) is included.
+The first public preview was published on 16 November 2026 under the Apache
+License, Version 2.0. [Release notes](https://github.com/AlphaArtemis/artemis-memory-core/releases/tag/v0.1.0-alpha.1) · [License](LICENSE)
 
 Copyright 2026 Armando Graziani
 
 Artemis Bloom Studios is the trade name and project identity; the copyright
 holder is Armando Graziani.
 
+## Verified Milestones — November 2026
+
+On 20 November 2026, a private deployment completed a retrieval and integrity
+test for one authorized message captured after the most recent export.
+
+1. The message was captured from the browser and stored in private Google Drive.
+   The SHA-256 of the downloaded copy matched the captured text.
+2. The private deployment indexed the original and retrieved it through the
+   Memory plugin in Work.
+3. An independent test in a fresh Chat used only the conversation title and ID
+   to locate the message. It retrieved the full text in three pages and
+   recomputed its SHA-256 from the reconstructed UTF-8 bytes. The result
+   matched the original.
+
+Daily automatic acquisition in the private deployment remains experimental.
+The Community Edition offers the local CLI and Python interface described here.
+
 ## Requirements and installation
 
 - Python 3.11 or newer, with `sqlite3` and SQLite FTS5.
 - A POSIX system supporting descriptor-relative filesystem operations and
   `O_NOFOLLOW`. Windows is not supported in this alpha.
-- Local verification: macOS arm64, Python 3.14.2, SQLite 3.51.1. Other Python
-  versions and Linux are CI targets, not currently verified platforms.
+- The first preview was tested on macOS arm64 with Python 3.14.2 and SQLite
+  3.51.1, and in CI on Ubuntu 24.04 with Python 3.11 and 3.14.
 - No Python packages to download. No global installation or shell changes.
 
-Extract the source candidate ZIP into a new directory, open a terminal there,
-then run this sequence. `mktemp` creates a separate area for application and data:
+Extract the source ZIP from the release page or clone this repository. Run the
+following commands from the source directory. `mktemp` creates a separate area
+for the application and demo state.
 
 ```sh
 trial_dir="$(mktemp -d)"
@@ -142,6 +160,7 @@ alpha is not an environment for running hostile code. The operator, installed
 program and local registry must be trusted; protection against malicious code
 or another process running as the same local user has not been demonstrated.
 
-The GitHub Actions workflow is prepared with pinned actions. **It has not run on
-GitHub.** Repository creation, publication and validation from a public clone
-remain separate release steps.
+All 37 tests, the synthetic demo and offline installation passed from a clean
+public clone on macOS arm64. Both Ubuntu jobs passed in GitHub Actions. GitHub
+cancelled the macOS jobs before the tests ran because the runner configuration
+was unsupported. [CI results](https://github.com/AlphaArtemis/artemis-memory-core/actions/runs/43803117758)
